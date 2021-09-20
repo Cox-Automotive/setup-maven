@@ -1,19 +1,47 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as toolCache from '@actions/tool-cache'
+import * as path from 'path'
 
-async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || ''
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    core.setFailed(error.message)
+// Sets base dir from arch.
+// FIXME: There's gotta be a cleaner way for this.
+if (!tempDirectory) {
+  let baseLocation: string
+  if (process.platform === 'win32') {
+    baseLocation = process.env['USERPROFILE'] || 'C:\\'
+  } else {
+    if (process.platform === 'darwin') {
+      baseLocation = '/Users'
+    } else {
+      baseLocation = '/home'
+    }
   }
+  tempDirectory = path.join(baseLocation, 'actions', 'temp')
 }
 
-run()
+export async function getMaven(version: string): Promise<void> {
+  // TODO: Find library for allowing: >=3.0.0 or 3.0.x or >= 3.8.5 <= 4.0.0
+  if (!version.match('^\\d+(\\.\\d+){0,2}$'))
+    throw new Error('invalid version input')
+  let toolPath = toolCache.find('maven', version)
+  if (!toolPath) await downloadMaven(version)
+  toolPath = path.join(toolPath, 'bin')
+  core.addPath(toolPath)
+}
+
+async function downloadMaven(version: string): Promise<string> {
+  const toolDirectoryName = `apache-maven-${version}`
+
+  const downloadURL = `https://apache.org/dyn/closer.cgi?filename=maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz&action=download`
+  console.log(`downloading: ${downloadURL}`) // eslint-disable-line no-console
+
+  try {
+    const downloadPath = await toolCache.downloadTool(downloadURL)
+    const extractedPath = await toolCache.extractTar(downloadPath)
+    const toolRoot = path.join(extractedPath, toolDirectoryName)
+    return await toolCache.cacheDir(toolRoot, 'maven', version)
+  } catch (error) {
+    throw error
+  }
+}
