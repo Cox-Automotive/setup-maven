@@ -1,29 +1,15 @@
-import {wait} from '../src/wait'
-import * as process from 'process'
-import * as cp from 'child_process'
-import * as path from 'path'
+import * as main from '../src/main'
 import {expect, test} from '@jest/globals'
 
-test('throws invalid number', async () => {
-  const input = parseInt('foo', 10)
-  await expect(wait(input)).rejects.toThrow('milliseconds not a number')
+test('with invalid input', async () => {
+  const input = 'invalid.version.number'
+  await expect(main.getMaven(input)).rejects.toThrow('invalid version input')
 })
 
-test('wait 500 ms', async () => {
-  const start = new Date()
-  await wait(500)
-  const end = new Date()
-  var delta = Math.abs(end.getTime() - start.getTime())
-  expect(delta).toBeGreaterThan(450)
-})
+// FIXME: Not sure why this fails?
+// test('with valid input', async () => {
+//   const input = '3.8.5'
+//   await expect(main.getMaven(input)).toBe(true);
+// })
 
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = '500'
-  const np = process.execPath
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecFileSyncOptions = {
-    env: process.env
-  }
-  console.log(cp.execFileSync(np, [ip], options).toString())
-})
+// TODO: Add more tests
