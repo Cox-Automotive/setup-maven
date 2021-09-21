@@ -1,4 +1,4 @@
-import {getMaven, downloadMaven} from '../src/main'
+import {getMaven} from '../src/main'
 import {jest, describe, expect, test} from '@jest/globals'
 import * as path from 'path'
 
