@@ -1,15 +1,28 @@
-import * as main from '../src/main'
-import {expect, test} from '@jest/globals'
+import {getMaven, downloadMaven} from '../src/main'
+import {jest, describe, expect, test} from '@jest/globals'
+import * as path from 'path'
 
-test('with invalid input', async () => {
-  const input = 'invalid.version.number'
-  await expect(main.getMaven(input)).rejects.toThrow('invalid version input')
+const cachePath = path.join(__dirname, 'CACHE')
+const tempPath = path.join(__dirname, 'TEMP')
+
+// Set temp and tool directories -- "mocking"
+process.env['RUNNER_TEMP'] = tempPath
+process.env['RUNNER_TOOL_CACHE'] = cachePath
+
+describe('Download Maven Version', () => {
+  test('with invalid input', async () => {
+    const input = 'invalid.version.number'
+    await expect(getMaven(input)).rejects.toThrow('invalid version input')
+  })
+
+  test('with invalid string', async () => {
+    const input = 382
+    await expect(getMaven(String(input))).rejects.toThrow()
+  })
+
+  test('with non-existent version', async () => {
+    const input = '100.1.2'
+    await expect(getMaven(input)).rejects.toThrow()
+  })
 })
 
-// FIXME: Not sure why this fails?
-// test('with valid input', async () => {
-//   const input = '3.8.5'
-//   await expect(main.getMaven(input)).toBe(true);
-// })
-
-// TODO: Add more tests
