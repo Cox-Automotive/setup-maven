@@ -1,23 +1,22 @@
 import * as core from '@actions/core'
 import * as toolCache from '@actions/tool-cache'
 import * as path from 'path'
+import * as os from 'os'
 
 let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || ''
 
-// Sets base dir from arch.
-// FIXME: There's gotta be a cleaner way for this.
+// Sets rootDir for windows, MacOS, or linux
 if (!tempDirectory) {
-  let baseLocation: string
-  if (process.platform === 'win32') {
-    baseLocation = process.env['USERPROFILE'] || 'C:\\'
+  let rootDir: string
+  if (os.platform() === 'win32') {
+    rootDir = process.env['USERPROFILE'] || 'C:\\'
+  } else if (os.platform() === 'darwin') {
+    rootDir = '/Users'
   } else {
-    if (process.platform === 'darwin') {
-      baseLocation = '/Users'
-    } else {
-      baseLocation = '/home'
-    }
+    // Assume linux
+    rootDir = '/home'
   }
-  tempDirectory = path.join(baseLocation, 'actions', 'temp')
+  tempDirectory = path.join(rootDir, 'actions', 'temp')
 }
 
 export async function getMaven(version: string): Promise<void> {
