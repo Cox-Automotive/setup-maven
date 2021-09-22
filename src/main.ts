@@ -1,19 +1,46 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as toolCache from '@actions/tool-cache'
+import * as path from 'path'
+import * as os from 'os'
 
-async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || ''
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    core.setFailed(error.message)
+// Sets rootDir for windows, MacOS, or linux
+if (!tempDirectory) {
+  let rootDir: string
+  if (os.platform() === 'win32') {
+    rootDir = process.env['USERPROFILE'] || 'C:\\'
+  } else if (os.platform() === 'darwin') {
+    rootDir = '/Users'
+  } else {
+    // Assume linux
+    rootDir = '/home'
   }
+  tempDirectory = path.join(rootDir, 'actions', 'temp')
 }
 
-run()
+export async function getMaven(version: string): Promise<void> {
+  // TODO: Find library for allowing: >=3.0.0 or 3.0.x or >= 3.8.5 <= 4.0.0
+  if (!version.match('^\\d+(\\.\\d+){0,2}$'))
+    throw new Error('invalid version input')
+  let toolPath = toolCache.find('maven', version)
+  if (!toolPath) await downloadMaven(version)
+  toolPath = path.join(toolPath, 'bin')
+  core.addPath(toolPath)
+}
+
+async function downloadMaven(version: string): Promise<string> {
+  const toolDirectoryName = `apache-maven-${version}`
+
+  const downloadURL = `http://apache.cbox.biz/maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz`
+  console.log(`downloading: ${downloadURL}`) // eslint-disable-line no-console
+
+  try {
+    const downloadPath = await toolCache.downloadTool(downloadURL)
+    const extractedPath = await toolCache.extractTar(downloadPath)
+    const toolRoot = path.join(extractedPath, toolDirectoryName)
+    return await toolCache.cacheDir(toolRoot, 'maven', version)
+  } catch (error) {
+    throw error
+  }
+}
