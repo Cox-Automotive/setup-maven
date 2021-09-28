@@ -20,7 +20,6 @@ if (!tempDirectory) {
 }
 
 export async function getMaven(version: string): Promise<void> {
-
   if (!version.match('^\\d+(\\.\\d+){0,2}$'))
     throw new Error('invalid version input')
 
@@ -48,6 +47,6 @@ async function downloadMaven(version: string): Promise<string> {
   }
 }
 
-function isEmpty(str: string) {
-  return (!str || str.length === 0 );
+function isEmpty(str: string): boolean {
+  return !str || str.length === 0
 }

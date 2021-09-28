@@ -10,10 +10,10 @@ process.env['RUNNER_TEMP'] = tempPath
 process.env['RUNNER_TOOL_CACHE'] = cachePath
 
 describe('Download Maven Version', () => {
-  // test('with invalid input', async () => {
-  //   const input = 'invalid.version.number'
-  //   await expect(getMaven(input)).rejects.toThrow('invalid version input')
-  // })
+  test('with invalid input', async () => {
+    const input = 'invalid.version.number'
+    await expect(getMaven(input)).rejects.toThrow('invalid version input')
+  })
   //
   // test('with invalid string', async () => {
   //   const input = 382
@@ -25,4 +25,3 @@ describe('Download Maven Version', () => {
   //   await expect(getMaven(input)).rejects.toThrow()
   // })
 })
-
