@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Remove Maven
+        run: sudo apt-get purge maven2
       - uses: ./
         with:
           maven-version: '3.6.3'
