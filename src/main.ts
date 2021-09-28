@@ -20,9 +20,11 @@ if (!tempDirectory) {
 }
 
 export async function getMaven(version: string): Promise<void> {
-  // TODO: Find library for allowing: >=3.0.0 or 3.0.x or >= 3.8.5 <= 4.0.0
   if (!version.match('^\\d+(\\.\\d+){0,2}$'))
     throw new Error('invalid version input')
+
+  if (isEmpty(version)) version = '3.0.5'
+
   let toolPath = toolCache.find('maven', version)
   if (!toolPath) await downloadMaven(version)
   toolPath = path.join(toolPath, 'bin')
@@ -43,4 +45,8 @@ async function downloadMaven(version: string): Promise<string> {
   } catch (error) {
     throw error
   }
+}
+
+function isEmpty(str: string): boolean {
+  return !str || str.length === 0
 }

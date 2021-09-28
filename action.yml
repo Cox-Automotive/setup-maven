@@ -5,7 +5,7 @@ inputs:
   maven-version:
     required: true
     description: 'Version Spec of the version to use. Examples: 3.8.2'
-    default: '3.8.2'
+    default: '3.0.5'
 runs:
   using: 'node12'
   main: 'dist/index.js'

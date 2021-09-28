@@ -58,9 +58,10 @@ if (!tempDirectory) {
 }
 function getMaven(version) {
     return __awaiter(this, void 0, void 0, function* () {
-        // TODO: Find library for allowing: >=3.0.0 or 3.0.x or >= 3.8.5 <= 4.0.0
         if (!version.match('^\\d+(\\.\\d+){0,2}$'))
             throw new Error('invalid version input');
+        if (isEmpty(version))
+            version = '3.0.5';
         let toolPath = toolCache.find('maven', version);
         if (!toolPath)
             yield downloadMaven(version);
@@ -84,6 +85,9 @@ function downloadMaven(version) {
             throw error;
         }
     });
+}
+function isEmpty(str) {
+    return !str || str.length === 0;
 }
 
 
