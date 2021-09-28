@@ -16,22 +16,10 @@ jobs:
       - run: |
           npm run all
 
-  test_setVersion: # make sure the action works on a clean machine without building
+  test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./
-        with:
-          maven-version: '3.8.2'
-      - name: Check Maven Version
-        run: mvn -v
-      - name: Remove Maven
-        run: sudo apt-get remove maven
-
-  test_setNoVersion:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./
-      - name: Check Maven Version
+      - name: Test Maven
         run: mvn -v
