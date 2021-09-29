@@ -25,8 +25,8 @@ export async function getMaven(version: string): Promise<void> {
 
   if (isEmpty(version)) version = '3.0.5'
 
+  await downloadMaven(version)
   let toolPath = toolCache.find('maven', version)
-  if (!toolPath) await downloadMaven(version)
   toolPath = path.join(toolPath, 'bin')
   core.addPath(toolPath)
 }
