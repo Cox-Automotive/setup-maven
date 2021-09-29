@@ -35,7 +35,8 @@ async function downloadMaven(version: string): Promise<string> {
   const toolDirectoryName = `apache-maven-${version}`
 
   const downloadURL = `http://apache.cbox.biz/maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz`
-  console.log(`downloading: ${downloadURL}`) // eslint-disable-line no-console
+  core.info(`downloadURL: ${downloadURL}`) // eslint-disable-line no-console
+  core.info(`downloadPath: ${downloadPath}`)
 
   try {
     const downloadPath = await toolCache.downloadTool(downloadURL)
