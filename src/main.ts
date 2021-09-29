@@ -36,12 +36,15 @@ async function downloadMaven(version: string): Promise<string> {
 
   const downloadURL = `http://apache.cbox.biz/maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz`
   core.info(`downloadURL: ${downloadURL}`) // eslint-disable-line no-console
-  core.info(`downloadPath: ${downloadPath}`)
+  
 
   try {
     const downloadPath = await toolCache.downloadTool(downloadURL)
+    core.info(`downloadPath: ${downloadPath}`)
     const extractedPath = await toolCache.extractTar(downloadPath)
+    core.info(`extractedPath: ${extractedPath}`)
     const toolRoot = path.join(extractedPath, toolDirectoryName)
+    core.info(`toolRoot: ${toolRoot}`)
     return await toolCache.cacheDir(toolRoot, 'maven', version)
   } catch (error) {
     throw error

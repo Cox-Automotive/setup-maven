@@ -62,9 +62,8 @@ function getMaven(version) {
             throw new Error('invalid version input');
         if (isEmpty(version))
             version = '3.0.5';
+        yield downloadMaven(version);
         let toolPath = toolCache.find('maven', version);
-        if (!toolPath)
-            yield downloadMaven(version);
         toolPath = path.join(toolPath, 'bin');
         core.addPath(toolPath);
     });
@@ -74,11 +73,14 @@ function downloadMaven(version) {
     return __awaiter(this, void 0, void 0, function* () {
         const toolDirectoryName = `apache-maven-${version}`;
         const downloadURL = `http://apache.cbox.biz/maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz`;
-        console.log(`downloading: ${downloadURL}`); // eslint-disable-line no-console
+        core.info(`downloadURL: ${downloadURL}`); // eslint-disable-line no-console
         try {
             const downloadPath = yield toolCache.downloadTool(downloadURL);
+            core.info(`downloadPath: ${downloadPath}`);
             const extractedPath = yield toolCache.extractTar(downloadPath);
+            core.info(`extractedPath: ${extractedPath}`);
             const toolRoot = path.join(extractedPath, toolDirectoryName);
+            core.info(`toolRoot: ${toolRoot}`);
             return yield toolCache.cacheDir(toolRoot, 'maven', version);
         }
         catch (error) {
