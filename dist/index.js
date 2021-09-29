@@ -93,6 +93,19 @@ function downloadMaven(version) {
 function isEmpty(str) {
     return !str || str.length === 0;
 }
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const version = core.getInput('maven-version');
+            if (version)
+                yield getMaven(version);
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+    });
+}
+run();
 
 
 /***/ }),

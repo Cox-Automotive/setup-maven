@@ -58,3 +58,15 @@ async function downloadMaven(version: string): Promise<string> {
 function isEmpty(str: string): boolean {
   return !str || str.length === 0
 }
+
+
+async function run(): Promise<void> {
+  try {
+    const version = core.getInput('maven-version')
+    if (version) await getMaven(version)
+  } catch (error) {
+    core.setFailed(error.message)
+  }
+}
+
+run()
