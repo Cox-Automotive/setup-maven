@@ -41,6 +41,7 @@ const toolCache = __importStar(__nccwpck_require__(784));
 const path = __importStar(__nccwpck_require__(622));
 const os = __importStar(__nccwpck_require__(87));
 let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || '';
+core.info(`Starting Maven-setup`);
 // Sets rootDir for windows, MacOS, or linux
 if (!tempDirectory) {
     let rootDir;
@@ -62,9 +63,9 @@ function getMaven(version) {
             throw new Error('invalid version input');
         if (isEmpty(version))
             version = '3.0.5';
+        core.info(`Installing Maven ${version}`);
+        yield downloadMaven(version);
         let toolPath = toolCache.find('maven', version);
-        if (!toolPath)
-            yield downloadMaven(version);
         toolPath = path.join(toolPath, 'bin');
         core.addPath(toolPath);
     });
@@ -74,11 +75,14 @@ function downloadMaven(version) {
     return __awaiter(this, void 0, void 0, function* () {
         const toolDirectoryName = `apache-maven-${version}`;
         const downloadURL = `http://apache.cbox.biz/maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz`;
-        console.log(`downloading: ${downloadURL}`); // eslint-disable-line no-console
+        core.info(`downloadURL: ${downloadURL}`);
         try {
             const downloadPath = yield toolCache.downloadTool(downloadURL);
+            core.info(`downloadPath: ${downloadPath}`);
             const extractedPath = yield toolCache.extractTar(downloadPath);
+            core.info(`extractedPath: ${extractedPath}`);
             const toolRoot = path.join(extractedPath, toolDirectoryName);
+            core.info(`toolRoot: ${toolRoot}`);
             return yield toolCache.cacheDir(toolRoot, 'maven', version);
         }
         catch (error) {
@@ -89,6 +93,19 @@ function downloadMaven(version) {
 function isEmpty(str) {
     return !str || str.length === 0;
 }
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const version = core.getInput('maven-version');
+            if (version)
+                yield getMaven(version);
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+    });
+}
+run();
 
 
 /***/ }),

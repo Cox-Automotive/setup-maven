@@ -5,6 +5,8 @@ import * as os from 'os'
 
 let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || ''
 
+core.info(`Starting Maven-setup`)
+
 // Sets rootDir for windows, MacOS, or linux
 if (!tempDirectory) {
   let rootDir: string
@@ -25,8 +27,10 @@ export async function getMaven(version: string): Promise<void> {
 
   if (isEmpty(version)) version = '3.0.5'
 
+  core.info(`Installing Maven ${version}`)
+
+  await downloadMaven(version)
   let toolPath = toolCache.find('maven', version)
-  if (!toolPath) await downloadMaven(version)
   toolPath = path.join(toolPath, 'bin')
   core.addPath(toolPath)
 }
@@ -35,12 +39,15 @@ async function downloadMaven(version: string): Promise<string> {
   const toolDirectoryName = `apache-maven-${version}`
 
   const downloadURL = `http://apache.cbox.biz/maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz`
-  console.log(`downloading: ${downloadURL}`) // eslint-disable-line no-console
+  core.info(`downloadURL: ${downloadURL}`)
 
   try {
     const downloadPath = await toolCache.downloadTool(downloadURL)
+    core.info(`downloadPath: ${downloadPath}`)
     const extractedPath = await toolCache.extractTar(downloadPath)
+    core.info(`extractedPath: ${extractedPath}`)
     const toolRoot = path.join(extractedPath, toolDirectoryName)
+    core.info(`toolRoot: ${toolRoot}`)
     return await toolCache.cacheDir(toolRoot, 'maven', version)
   } catch (error) {
     throw error
@@ -50,3 +57,14 @@ async function downloadMaven(version: string): Promise<string> {
 function isEmpty(str: string): boolean {
   return !str || str.length === 0
 }
+
+async function run(): Promise<void> {
+  try {
+    const version = core.getInput('maven-version')
+    if (version) await getMaven(version)
+  } catch (error) {
+    core.setFailed(error.message)
+  }
+}
+
+run()
