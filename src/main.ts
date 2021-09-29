@@ -5,6 +5,8 @@ import * as os from 'os'
 
 let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || ''
 
+core.info(`Starting Maven-setup`)
+
 // Sets rootDir for windows, MacOS, or linux
 if (!tempDirectory) {
   let rootDir: string
@@ -24,6 +26,8 @@ export async function getMaven(version: string): Promise<void> {
     throw new Error('invalid version input')
 
   if (isEmpty(version)) version = '3.0.5'
+
+  core.info(`Installing Maven ${version}`)
 
   await downloadMaven(version)
   let toolPath = toolCache.find('maven', version)

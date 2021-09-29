@@ -41,6 +41,7 @@ const toolCache = __importStar(__nccwpck_require__(784));
 const path = __importStar(__nccwpck_require__(622));
 const os = __importStar(__nccwpck_require__(87));
 let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || '';
+core.info(`Starting Maven-setup`);
 // Sets rootDir for windows, MacOS, or linux
 if (!tempDirectory) {
     let rootDir;
@@ -62,6 +63,7 @@ function getMaven(version) {
             throw new Error('invalid version input');
         if (isEmpty(version))
             version = '3.0.5';
+        core.info(`Installing Maven ${version}`);
         yield downloadMaven(version);
         let toolPath = toolCache.find('maven', version);
         toolPath = path.join(toolPath, 'bin');
