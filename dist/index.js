@@ -75,7 +75,7 @@ function downloadMaven(version) {
     return __awaiter(this, void 0, void 0, function* () {
         const toolDirectoryName = `apache-maven-${version}`;
         const downloadURL = `http://apache.cbox.biz/maven/maven-3/${version}/binaries/${toolDirectoryName}-bin.tar.gz`;
-        core.info(`downloadURL: ${downloadURL}`); // eslint-disable-line no-console
+        core.info(`downloadURL: ${downloadURL}`);
         try {
             const downloadPath = yield toolCache.downloadTool(downloadURL);
             core.info(`downloadPath: ${downloadPath}`);
