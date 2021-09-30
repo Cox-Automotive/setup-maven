@@ -16,7 +16,6 @@ jobs:
           npm install
       - run: |
           npm run all
-
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
@@ -24,5 +23,3 @@ jobs:
       - uses: ./
         with:
           maven-version: '3.8.2'
-      - name: test maven
-          run: mvn -v
