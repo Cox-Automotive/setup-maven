@@ -15,7 +15,7 @@ steps:
 - uses: actions/checkout@v2
 - uses: actions/setup-maven@main
   with:
-    maven-version: '3.8.2'
+    maven-version: "3.8.2"
 ```
 ## License
 
