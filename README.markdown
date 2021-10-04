@@ -1,7 +1,7 @@
 # setup-maven
 
 <p align="left">
-  <a href="https://github.com/Cox-Automotive/setup-maven"><img alt="GitHub Actions status" src="https://github.com/Cox-Automotive/setup-maven/workflows/Main%20workflow/badge.svg"></a>
+  <a href="https://github.com/Cox-Automotive/setup-maven/actions?query=workflow%3Atest"><img alt="GitHub Actions status" src="https://github.com/Cox-Automotive/setup-maven/workflows/test/badge.svg"></a>
 </p>
 
 This action provides the following functionality for GitHub Actions runners:
