@@ -5,7 +5,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-maven_version="$(mvn --v)"
+maven_version="$(mvn -v)"
 if ! echo "$maven_version" | grep -q --fixed-strings /opt/hostedtoolcache/maven/"$1"/x64; then
     echo "Unexpected version"
     exit 1

@@ -31,4 +31,5 @@ jobs:
         with:
           maven-version: "3.8.2"
       - name: test maven
-        run: mvn -v
+        run: __tests__/verify-maven.sh ${{ maven-version }}
+        shell: bash
