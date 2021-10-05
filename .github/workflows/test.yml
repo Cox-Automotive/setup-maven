@@ -17,10 +17,17 @@ jobs:
           npm install
       - run: |
           npm run all
-      - uses: ./
+
+      - name: Set Maven Version
+        run: |
+          echo "maven-version=3.8.3" >> $GITHUB_ENV
+
+      - name: Download Maven
+        uses: ./
         with:
-          maven-version: echo "maven-version=3.8.3" >> $GITHUB_ENV
-      - name: test maven
+          maven-version: ${{ env.maven-version }}
+
+      - name: Test Maven
         run: __tests__/verify-maven.sh ${{ env.maven-version }}
         shell: bash
 
@@ -28,9 +35,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./
+
+      - name: Set Maven Version
+        run: |
+          echo "maven-version=3.8.3" >> $GITHUB_ENV
+
+      - name: Download Maven
+        uses: ./
         with:
-          maven-version: echo "maven-version=3.8.3" >> $GITHUB_ENV
-      - name: test maven
+          maven-version: ${{ env.maven-version }}
+
+      - name: Test Maven
         run: __tests__/verify-maven.sh ${{ env.maven-version }}
         shell: bash
