@@ -11,7 +11,7 @@ steps:
 - uses: actions/checkout@v2
 - uses: Cox-Automotive/setup-maven@main
   with:
-    maven-version: "3.8.2"
+    maven-version: "3.8.3"
 ```
 ## License
 
