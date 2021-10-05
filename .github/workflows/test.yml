@@ -19,9 +19,9 @@ jobs:
           npm run all
       - uses: ./
         with:
-          maven-version: "3.8.3"
+          maven-version: echo "maven-version=3.8.3" >> $GITHUB_ENV
       - name: test maven
-        run: __tests__/verify-maven.sh ${{ maven-version }}
+        run: __tests__/verify-maven.sh ${{ env.maven-version }}
         shell: bash
 
   test: # make sure the action works on a clean machine without building
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./
         with:
-          maven-version: "3.8.3"
+          maven-version: echo "maven-version=3.8.3" >> $GITHUB_ENV
       - name: test maven
-        run: __tests__/verify-maven.sh ${{ maven-version }}
+        run: __tests__/verify-maven.sh ${{ env.maven-version }}
         shell: bash
