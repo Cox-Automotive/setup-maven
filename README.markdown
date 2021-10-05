@@ -9,7 +9,7 @@ Input `maven-version` is mandatory.
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: actions/setup-maven@main
+- uses: Cox-Automotive/setup-maven@main
   with:
     maven-version: "3.8.2"
 ```
