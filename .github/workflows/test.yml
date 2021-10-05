@@ -1,10 +1,11 @@
-name: 'build-test'
+name: "build-test"
 on: # rebuild any PRs and main branch changes
   pull_request:
+    branches: [ main ]
   push:
     branches:
       - main
-      - 'releases/*'
+      - "releases/*"
       - kerry
 
 jobs:
@@ -16,18 +17,34 @@ jobs:
           npm install
       - run: |
           npm run all
-      - uses: ./
+
+      - name: Set Maven Version
+        run: |
+          echo "maven-version=3.8.3" >> $GITHUB_ENV
+
+      - name: Download Maven
+        uses: ./
         with:
-          maven-version: '3.8.2'
-      - name: test maven
-        run: mvn -v
+          maven-version: ${{ env.maven-version }}
+
+      - name: Test Maven
+        run: __tests__/verify-maven.sh ${{ env.maven-version }}
+        shell: bash
 
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./
+
+      - name: Set Maven Version
+        run: |
+          echo "maven-version=3.8.3" >> $GITHUB_ENV
+
+      - name: Download Maven
+        uses: ./
         with:
-          maven-version: '3.8.2'
-      - name: test maven
-        run: mvn -v
+          maven-version: ${{ env.maven-version }}
+
+      - name: Test Maven
+        run: __tests__/verify-maven.sh ${{ env.maven-version }}
+        shell: bash
