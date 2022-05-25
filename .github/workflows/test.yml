@@ -1,7 +1,7 @@
 name: "build-test"
 on: # rebuild any PRs and main branch changes
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
     branches:
       - main
@@ -20,7 +20,7 @@ jobs:
 
       - name: Set Maven Version
         run: |
-          echo "maven-version=3.8.3" >> $GITHUB_ENV
+          echo "maven-version=3.8.5" >> $GITHUB_ENV
 
       - name: Download Maven
         uses: ./
@@ -38,7 +38,7 @@ jobs:
 
       - name: Set Maven Version
         run: |
-          echo "maven-version=3.8.3" >> $GITHUB_ENV
+          echo "maven-version=3.8.5" >> $GITHUB_ENV
 
       - name: Download Maven
         uses: ./
