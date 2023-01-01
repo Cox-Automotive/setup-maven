@@ -37,7 +37,6 @@ export async function getMaven(version: string): Promise<void> {
 
 async function downloadMaven(version: string): Promise<string> {
   const toolDirectoryName = `apache-maven-${version}`
-
   const downloadURL = `https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${version}/${toolDirectoryName}-bin.tar.gz`
   core.info(`downloadURL: ${downloadURL}`)
 
