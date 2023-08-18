@@ -5,7 +5,7 @@ import * as os from 'os'
 
 let tempDirectory = process.env['RUNNER_TEMPDIRECTORY'] || ''
 
-core.info(`Starting Maven-setup`)
+core.info('Starting Maven-setup')
 
 // Sets rootDir for windows, MacOS, or linux
 if (!tempDirectory) {
@@ -62,7 +62,7 @@ async function run(): Promise<void> {
     const version = core.getInput('maven-version')
     if (version) await getMaven(version)
   } catch (error) {
-    core.setFailed(error.message)
+    if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
